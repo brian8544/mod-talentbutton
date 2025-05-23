@@ -75,19 +75,33 @@ void TalentButtonWorldScript::OnAfterConfigLoad(bool /*reload*/)
     TalentButton_Enabled = sConfigMgr->GetOption<bool>("TalentButton.Enable", false);
 }
 
+void TalentButtonLevelUp::GrantDualTalents(Player* player)
+{
+    uint32 spellId = 63624;
+    uint32 achievementId = 2716;
+    const AchievementEntry* achievement = sAchievementStore.LookupEntry(achievementId);
+
+    if (!player->HasSpell(spellId))
+        player->CastSpell(player, spellId, true);
+
+    if (achievement)
+        player->CompletedAchievement(achievement);
+}
+
 void TalentButtonLevelUp::OnPlayerLevelChanged(Player* player, uint8 oldLevel)
 {
-    if (player->GetLevel() == 10 && oldLevel < 10)
+    if (TalentButton_Enabled && oldLevel < 10 && player->GetLevel() >= 10)
     {
-        uint32 spellId = 63624;
-        uint32 achievementlId = 2716;
-        const AchievementEntry* achievement = sAchievementStore.LookupEntry(achievementlId);
+        GrantDualTalents(player);
+    }
+}
 
-        if (!player->HasSpell(spellId))
-            player->CastSpell(player, spellId, true);
-
-        if (achievement)
-            player->CompletedAchievement(achievement);
+void TalentButtonLevelUp::OnPlayerLogin(Player* player)
+{
+    // This function ensures that players above level 10 also receive the spell/achievement upon login.
+    if (TalentButton_Enabled && player->GetLevel() >= 10)
+    {
+        GrantDualTalents(player);
     }
 }
 

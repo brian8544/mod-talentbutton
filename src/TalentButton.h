@@ -22,7 +22,11 @@ local function CreateTalentButton()
 
     local button = CreateFrame("CheckButton", "TalentButton", parent:GetParent(), "PlayerSpecTabTemplate")
     button:SetSize(32, 32)
-    button:SetPoint("TOPLEFT", parent, "BOTTOMLEFT", 0, -22)
+    if _G["PlayerSpecTab3"] and _G["PlayerSpecTab3"]:IsShown() then
+        button:SetPoint("TOPLEFT", _G["PlayerSpecTab3"], "BOTTOMLEFT", 0, -22)
+    else
+        button:SetPoint("TOPLEFT", parent, "BOTTOMLEFT", 0, -22)
+    end
 
     local normalTexture = button:GetNormalTexture()
     normalTexture:SetTexture("Interface\\Icons\\Inv_misc_book_10")
@@ -114,6 +118,8 @@ public:
     TalentButtonLevelUp() : PlayerScript("TalentButtonLevelUp") {}
 
     void OnPlayerLevelChanged(Player* player, uint8 oldLevel) override;
+    void OnPlayerLogin(Player* player) override;
+    void GrantDualTalents(Player* player);
 };
 
 class TalentButtonCommandScript : public CommandScript
