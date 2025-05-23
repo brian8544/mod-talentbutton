@@ -135,6 +135,7 @@ bool TalentButtonCommandScript::HandleModTalentResetCommand(ChatHandler* handler
         return false;
 
     targetPlayer->resetTalents(true);
+    targetPlayer->ResetPetTalents();
     targetPlayer->SendTalentsInfoData(false);
     handler->PSendSysMessage("Your talents have been reset.");
 
